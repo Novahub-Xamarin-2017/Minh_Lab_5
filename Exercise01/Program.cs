@@ -8,6 +8,8 @@ using System.Net.Http.Headers;
 using System.Web;
 using Newtonsoft.Json;
 using System.Threading;
+using Retrofit.Net;
+using RestSharp;
 
 namespace Exercise01
 { 
@@ -15,10 +17,26 @@ namespace Exercise01
     {
         public static string ApiKey = "087498271007cb77b740b52dc9a1b4ad-us17";
         public static string IdList = "2a02210045";
-        public static string IdCompaign = "90e5c4fc9c";
+        public static string IdCompaign = "fc0c0676fe";
 
         static void Main(string[] args)
         {
+            var restClient = new RestClient("https://us17.api.mailchimp.com/3.0/");
+            restClient.Authenticator = new HttpBasicAuthenticator("username", ApiKey);
+            restClient.AddDefaultHeader("content-type", "application/json");
+            var adapter = new RestAdapter(restClient);
+            var service = adapter.Create<IService>();
+            Console.Write("Send mail to email: ");
+            var str = Console.ReadLine();
+            var email = new { email_address = str, status = "subscribed" };
+            var response = service.AddEmail(IdList, email);
+            Console.WriteLine($"Add email: {response.ResponseStatus}");
+            Console.Write("Set content to mail: ");
+            str = Console.ReadLine();
+            response = service.SetContent(IdCompaign, new { html = str });
+            Console.WriteLine($"set content: {response.ResponseStatus}");
+            response = service.SendContent(IdCompaign);
+            Console.WriteLine($"send content: {response.ResponseStatus}");
             Console.ReadKey();
         }
         static async void Test()
@@ -86,6 +104,7 @@ namespace Exercise01
 
         static async void AddMember()
         {
+
             using (var http = new HttpClient())
             {
                 http.DefaultRequestHeaders.Authorization =
