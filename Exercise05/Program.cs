@@ -19,11 +19,12 @@ namespace Exercise05
         {
             Console.Write("FilePath of JsonFile: ");
             var str = Console.ReadLine();
-            if (!str.Equals(""))
+            if (!string.IsNullOrEmpty(str))
             {
                 filePath = str;
             }
-            var jsonString = ReadFile(filePath);
+
+            var jsonString = File.ReadAllText(filePath);
 
             var obj = JsonConvert.DeserializeObject<List<Book>>(jsonString);
             var xmlSerializer = new XmlSerializer(obj.GetType());
@@ -40,20 +41,6 @@ namespace Exercise05
             xmldoc.Save("../../../XmlFile/books.xml");
 
             Console.ReadKey();
-        }
-
-        static string ReadFile(string filePath)
-        {
-            var sr = new StreamReader(filePath);
-            var str = "";
-            var line = "";
-
-            while ((line = sr.ReadLine()) != null)
-            {
-                str = str + line + "\n";
-            }
-
-            return str;
         }
     }
 }
