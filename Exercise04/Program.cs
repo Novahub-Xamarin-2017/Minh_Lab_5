@@ -35,9 +35,9 @@ namespace Exercise04
             var xmlString = strWriter.ToString();
             Console.WriteLine(xmlString);
 
-            var qweqwe = new XmlDocument();
-            qweqwe.LoadXml(xmlString);
-            qweqwe.Save("../../../XmlFile/employees.xml");
+            var xmldoc = new XmlDocument();
+            xmldoc.LoadXml(xmlString);
+            xmldoc.Save("../../../XmlFile/employees.xml");
 
             Console.ReadKey();
         }
