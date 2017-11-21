@@ -13,13 +13,13 @@ namespace Exercise02.Model
         [DataMember(Name = "name")]
         public string Name { get; set; }
         [DataMember(Name = "catchPhrase")]
-        public string Catchphrase { get; set; }
+        public string CatchPhrase { get; set; }
         [DataMember(Name = "bs")]
         public string Bs { get; set; }
 
         public override string ToString()
         {
-            return $"Name: {Name} Catchphrase: {Catchphrase} Bs: {Bs}";
+            return $"Name: {Name} Catchphrase: {CatchPhrase} Bs: {Bs}";
         }
     }
 }

@@ -18,10 +18,10 @@ namespace Exercise02.Model
         RestResponse<User> GetUser([Path("id")] int id);
 
         [Post("users")]
-        RestResponse<bool> EditUser([Body] object obj);
+        RestResponse<bool> AddUser([Body] User user);
 
         [Put("users/{id}")]
-        RestResponse<bool> UpdateUser([Path("id")] int id, [Body] object obj);
+        RestResponse<bool> UpdateUser([Path("id")] int id, [Body] User user);
 
         [Delete("users/{id}")]
         RestResponse<bool> DeleteUser([Path("id")] int id);
