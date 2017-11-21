@@ -11,7 +11,7 @@ namespace Exercise03.Model
 {
     public interface IService
     {
-        [Get("weatherweather?q={city},vn&APPID=32e86d2782c009304019c7b0526d0155")]
+        [Get("weather?q={city},vn&APPID=32e86d2782c009304019c7b0526d0155")]
         RestResponse<WeatherObject> GetWeatherFollowCityName([Path("city")] string city);
 
         [Get("weather?lat={lat}&lon={lon}&APPID=32e86d2782c009304019c7b0526d0155")]
