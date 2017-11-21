@@ -23,16 +23,20 @@ namespace Exercise04
             {
                 filePath = str;
             }
-            var jsonString = ReadFile(filePath);
+            var jsonString = File.ReadAllText(filePath);
 
             var obj = JsonConvert.DeserializeObject<Employess>(jsonString);
             var xmlSerializer = new XmlSerializer(obj.GetType());
 
-            var strWriter = new StringWriter();
-            var writer = XmlWriter.Create(strWriter);
-            xmlSerializer.Serialize(writer, obj);
+            var xmlString = "";
 
-            var xmlString = strWriter.ToString();
+            using (var strWriter = new StringWriter())
+            {
+                var writer = XmlWriter.Create(strWriter);
+                xmlSerializer.Serialize(writer, obj);
+                xmlString = strWriter.ToString();
+            }
+
             Console.WriteLine(xmlString);
 
             var xmldoc = new XmlDocument();
@@ -40,20 +44,6 @@ namespace Exercise04
             xmldoc.Save("../../../XmlFile/employees.xml");
 
             Console.ReadKey();
-        }
-
-        static string ReadFile(string filePath)
-        {
-            var sr = new StreamReader(filePath);
-            var str = "";
-            var line = "";
-
-            while ((line = sr.ReadLine()) != null)
-            {
-                str = str + line + "\n";
-            }
-
-            return str;
         }
     }
 }
