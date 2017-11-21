@@ -35,9 +35,9 @@ namespace Exercise05
             var xmlString = strWriter.ToString();
             Console.WriteLine(xmlString);
 
-            var qweqwe = new XmlDocument();
-            qweqwe.LoadXml(xmlString);
-            qweqwe.Save("../../../XmlFile/books.xml");
+            var xmldoc = new XmlDocument();
+            xmldoc.LoadXml(xmlString);
+            xmldoc.Save("../../../XmlFile/books.xml");
 
             Console.ReadKey();
         }
