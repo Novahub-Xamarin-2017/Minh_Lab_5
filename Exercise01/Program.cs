@@ -24,19 +24,24 @@ namespace Exercise01
             var restClient = new RestClient("https://us17.api.mailchimp.com/3.0/");
             restClient.Authenticator = new HttpBasicAuthenticator("username", ApiKey);
             restClient.AddDefaultHeader("content-type", "application/json");
+
             var adapter = new RestAdapter(restClient);
             var service = adapter.Create<IService>();
+
             Console.Write("Send mail to email: ");
             var str = Console.ReadLine();
-            var email = new { email_address = str, status = "subscribed" };
+            var email = new Email { EmailAddress = str, Status = "subscribed" };
             var response = service.AddEmail(IdList, email);
             Console.WriteLine($"Add email: {response.ResponseStatus}");
+
             Console.Write("Set content to mail: ");
             str = Console.ReadLine();
             response = service.SetContent(IdCompaign, new { html = str });
             Console.WriteLine($"set content: {response.ResponseStatus}");
+
             response = service.SendContent(IdCompaign);
             Console.WriteLine($"send content: {response.ResponseStatus}");
+
             Console.ReadKey();
         }
         static async void Test()

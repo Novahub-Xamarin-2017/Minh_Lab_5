@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,9 +11,9 @@ namespace Exercise01
     [DataContract]
     public class Email
     {
-        [DataMember(Name = "email_address")]
+        [JsonProperty("email_address")]
         public string EmailAddress { set; get; }
-        [DataMember(Name = "status")]
+        [JsonProperty("status")]
         public string Status { set; get; }
     }
 }
