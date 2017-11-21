@@ -31,16 +31,17 @@ namespace Exercise01
             Console.Write("Send mail to email: ");
             var str = Console.ReadLine();
             var email = new Email { EmailAddress = str, Status = "subscribed" };
+            SimpleJson.CurrentJsonSerializerStrategy = new SerializerStrategy();
             var response = service.AddEmail(IdList, email);
             Console.WriteLine($"Add email: {response.ResponseStatus}");
 
-            Console.Write("Set content to mail: ");
+            /*Console.Write("Set content to mail: ");
             str = Console.ReadLine();
             response = service.SetContent(IdCompaign, new { html = str });
             Console.WriteLine($"set content: {response.ResponseStatus}");
 
             response = service.SendContent(IdCompaign);
-            Console.WriteLine($"send content: {response.ResponseStatus}");
+            Console.WriteLine($"send content: {response.ResponseStatus}");*/
 
             Console.ReadKey();
         }
