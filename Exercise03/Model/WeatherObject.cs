@@ -34,6 +34,6 @@ namespace Exercise03.Model
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("code")]
-        public int Cod { get; set; }
+        public int Code { get; set; }
     }
 }
