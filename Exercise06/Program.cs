@@ -15,6 +15,7 @@ namespace Exercise06
     {
         public static string filePath = "../../../XmlFile/booksExercise06.xml";
 
+
         static void Main(string[] args)
         {
             Console.Write("FilePath of XmlFile: ");
@@ -23,47 +24,19 @@ namespace Exercise06
             {
                 filePath = str;
             }
-            var xmlString = ReadFile(filePath);
 
-            var xml = new XmlDocument();
-            xml.LoadXml(xmlString);
+            var streamReader = new StreamReader(filePath);
+            var serializer = new XmlSerializer(typeof(Catalog));
+            var obj = (Catalog)serializer.Deserialize(streamReader);
 
-            var jsonString = JsonConvert.SerializeXmlNode(xml);
+            var jsonString = JsonConvert.SerializeObject(obj);
+
             var streamwriter = new StreamWriter("../../../JsonFile/booksExercise06.json");
-
-            Console.WriteLine(jsonString);
             streamwriter.Write(jsonString);
 
-            /*var obj = JsonConvert.DeserializeObject<Catalog>(xmlString);
-            JsonConvert.d
-            var xmlSerializer = new XmlSerializer(obj.GetType());
-
-            var strWriter = new StringWriter();
-            var writer = XmlWriter.Create(strWriter);
-            xmlSerializer.Serialize(writer, obj);
-
-            var xmlString = strWriter.ToString();
-            Console.WriteLine(xmlString);
-
-            var qweqwe = new XmlDocument();
-            qweqwe.LoadXml(xmlString);
-            qweqwe.Save("../../../JsonFile/booksExercise06.json");*/
+            Console.WriteLine(jsonString);
 
             Console.ReadKey();
-        }
-
-        static string ReadFile(string filePath)
-        {
-            var sr = new StreamReader(filePath);
-            var str = "";
-            var line = "";
-
-            while ((line = sr.ReadLine()) != null)
-            {
-                str = str + line + "\n";
-            }
-
-            return str;
         }
     }
 }
