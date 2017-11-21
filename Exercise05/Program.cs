@@ -31,7 +31,7 @@ namespace Exercise05
 
             var xmlString = "";
 
-            using (var strWriter = new StringWriter()
+            using (var strWriter = new StringWriter())
             {
                 var writer = XmlWriter.Create(strWriter);
                 xmlSerializer.Serialize(writer, obj);
