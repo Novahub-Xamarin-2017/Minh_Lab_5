@@ -47,7 +47,7 @@ namespace Exercise07
             Console.WriteLine(responeId.ResponseStatus);
 
             var objId = JsonConvert.DeserializeObject<BusServiceId>(responeId.Content);
-            SaveBusServiceIdtoXml("5", objId);
+            SaveBusServiceIdtoXml(id, objId);
 
             Console.ReadKey();
         }
