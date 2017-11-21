@@ -29,11 +29,15 @@ namespace Exercise05
             var obj = JsonConvert.DeserializeObject<List<Book>>(jsonString);
             var xmlSerializer = new XmlSerializer(obj.GetType());
 
-            var strWriter = new StringWriter();
-            var writer = XmlWriter.Create(strWriter);
-            xmlSerializer.Serialize(writer, obj);
+            var xmlString = "";
 
-            var xmlString = strWriter.ToString();
+            using (var strWriter = new StringWriter()
+            {
+                var writer = XmlWriter.Create(strWriter);
+                xmlSerializer.Serialize(writer, obj);
+                xmlString = strWriter.ToString();
+            }
+            
             Console.WriteLine(xmlString);
 
             var xmldoc = new XmlDocument();
