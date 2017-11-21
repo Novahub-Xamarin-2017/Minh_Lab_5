@@ -13,7 +13,7 @@ namespace Exercise04
 {
     public class Program
     {
-        public static string filePath = "../../../employees.json";
+        public static string filePath = "../../../JsonFile/employees.json";
 
         static void Main(string[] args)
         {
@@ -37,7 +37,7 @@ namespace Exercise04
 
             var qweqwe = new XmlDocument();
             qweqwe.LoadXml(xmlString);
-            qweqwe.Save("../../../employees.xml");
+            qweqwe.Save("../../../XmlFile/employees.xml");
 
             Console.ReadKey();
         }
