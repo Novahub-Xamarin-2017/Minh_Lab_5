@@ -25,26 +25,32 @@ namespace Exercise05
             }
 
             var jsonString = File.ReadAllText(filePath);
-
             var obj = JsonConvert.DeserializeObject<List<Book>>(jsonString);
+            var xmlString = ObjectToXmlString(obj);
+            Console.WriteLine(xmlString);
+
+            var folder = "../../../XmlFile/";
+            SaveAsXml(xmlString, folder);
+
+            Console.ReadKey();
+        }
+
+        static void SaveAsXml(string xmlString, string folder)
+        {
+            var xmldoc = new XmlDocument();
+            xmldoc.LoadXml(xmlString);
+            xmldoc.Save($"{folder}books.xml");
+        }
+
+        static string ObjectToXmlString(object obj)
+        {
             var xmlSerializer = new XmlSerializer(obj.GetType());
-
-            var xmlString = "";
-
             using (var strWriter = new StringWriter())
             {
                 var writer = XmlWriter.Create(strWriter);
                 xmlSerializer.Serialize(writer, obj);
-                xmlString = strWriter.ToString();
+                return strWriter.ToString();
             }
-            
-            Console.WriteLine(xmlString);
-
-            var xmldoc = new XmlDocument();
-            xmldoc.LoadXml(xmlString);
-            xmldoc.Save("../../../XmlFile/books.xml");
-
-            Console.ReadKey();
         }
     }
 }
