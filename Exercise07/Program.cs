@@ -25,50 +25,53 @@ namespace Exercise07
             Console.WriteLine(respone.ResponseStatus);
 
             var obj = respone.Data;
-            var xmlSerializer = new XmlSerializer(obj.GetType());
-
-            var xmlString = "";
-
-            using (var strWriter = new StringWriter())
-            {
-                var writer = XmlWriter.Create(strWriter);
-                xmlSerializer.Serialize(writer, obj);
-                xmlString = strWriter.ToString();
-            }
-
+            var xmlString = ObjectToXmlString(obj);
             Console.WriteLine(xmlString);
 
-            var xmldoc = new XmlDocument();
-            xmldoc.LoadXml(xmlString);
-            xmldoc.Save("../../../XmlFile/Service.xml");
+            var folder = "../../../XmlFile/";
+            SaveAsXml(xmlString, folder, "");
 
-            var id = "5";
+            var id = "12";
             var responeId = service.GetBusServiceId(id);
             Console.WriteLine(responeId.ResponseStatus);
 
             var objId = JsonConvert.DeserializeObject<BusServiceId>(responeId.Content);
-            SaveBusServiceIdtoXml(id, objId);
+            SaveBusServiceIdtoXml(id, objId, folder);
 
             Console.ReadKey();
         }
 
-        static void SaveBusServiceIdtoXml(string id, BusServiceId busServiceId)
+        static void SaveAsXml(string xmlString, string folder, string id)
         {
-            var xmlString = "";
-
-            using (var strWriter = new StringWriter())
-            {
-                var xmlSerializer = new XmlSerializer(busServiceId.GetType());
-                var writer = XmlWriter.Create(strWriter);
-                xmlSerializer.Serialize(writer, busServiceId);
-                xmlString = strWriter.ToString();
-            }
-
-            Console.WriteLine(xmlString);
-
             var xmldoc = new XmlDocument();
             xmldoc.LoadXml(xmlString);
-            xmldoc.Save($"../../../XmlFile/BusService{id}.xml");
+
+            if (string.IsNullOrEmpty(id))
+            {
+                xmldoc.Save($"{folder}Service.xml");
+            } else
+            {
+                xmldoc.Save($"{folder}BusService{id}.xml");
+            }
+        }
+
+        static string ObjectToXmlString(object obj)
+        {
+            var xmlSerializer = new XmlSerializer(obj.GetType());
+            using (var strWriter = new StringWriter())
+            {
+                var writer = XmlWriter.Create(strWriter);
+                xmlSerializer.Serialize(writer, obj);
+                return strWriter.ToString();
+            }
+        }
+
+        static void SaveBusServiceIdtoXml(string id, BusServiceId busServiceId, string folder)
+        {
+            var xmlString = ObjectToXmlString(busServiceId);
+            Console.WriteLine(xmlString);
+
+            SaveAsXml(xmlString, folder, id);
         }
     }
 }
