@@ -48,7 +48,7 @@ namespace Exercise01
                 }
             };
             var responseCreateCampaign = service.CreateCampaign(campaign);
-            IdCompaign = GetIdCompaign(responseCreateCampaign.Content);
+            IdCompaign = JsonConvert.DeserializeObject<Campaign>(responseCreateCampaign.Content).id;
             Console.WriteLine($"Create campaign: {responseCreateCampaign.ResponseStatus}");
 
             Console.Write("Set content to mail: ");
@@ -60,33 +60,6 @@ namespace Exercise01
             Console.WriteLine($"send content: {responseSendContent.ResponseStatus}");
 
             Console.ReadKey();
-        }
-
-        static string GetIdCompaign(string str)
-        {
-            var count = 0;
-            var start = 0;
-            var end = 0;
-
-            for (int i = 0; i < str.Length; i++)
-            {
-                if (str[i].ToString() == @"""")
-                {
-                    count++;
-                    if (count == 3)
-                    {
-                        start = i + 1;
-                    }
-
-                    if (count == 4)
-                    {
-                        end = i - 1;
-                        break;
-                    }
-                }
-            }
-
-            return str.Substring(start, end - start + 1);
         }
 
         static async void Test()
