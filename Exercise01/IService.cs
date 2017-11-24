@@ -19,5 +19,8 @@ namespace Exercise01
 
         [Post("campaigns/{idCompaign}/actions/send")]
         RestResponse<bool> SendContent([Path("idCompaign")] string id);
+
+        [Post("campaigns")]
+        RestResponse<bool> CreateCampaign([Body] object obj);
     }
 }

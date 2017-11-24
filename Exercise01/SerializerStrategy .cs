@@ -13,13 +13,11 @@ namespace Exercise01
         {
             if (clrPropertyName.Equals("EmailAddress"))
             {
-                Console.WriteLine(1);
                 return "email_address";
             }
 
             if (clrPropertyName.Equals("Status"))
             {
-                Console.WriteLine(2);
                 return "status";
             }
 

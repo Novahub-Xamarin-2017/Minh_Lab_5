@@ -32,19 +32,64 @@ namespace Exercise01
             var str = Console.ReadLine();
             var email = new Email { EmailAddress = str, Status = "subscribed" };
             SimpleJson.CurrentJsonSerializerStrategy = new SerializerStrategy();
-            var response = service.AddEmail(IdList, email);
-            Console.WriteLine($"Add email: {response.ResponseStatus}");
+            var responseAddEmail = service.AddEmail(IdList, email);
+            Console.WriteLine($"Add email: {responseAddEmail.ResponseStatus}");
+
+            Console.WriteLine("Create campaign: ");
+            var campaign = new
+            {
+                recipients = new { list_id = IdList },
+                type = "regular",
+                settings = new
+                {
+                    subject_line = "Only Test 1",
+                    reply_to = "huynhngocminh2511@gmail.com",
+                    from_name = "minh"
+                }
+            };
+            var responseCreateCampaign = service.CreateCampaign(campaign);
+            IdCompaign = GetIdCompaign(responseCreateCampaign.Content);
+            Console.WriteLine($"Create campaign: {responseCreateCampaign.ResponseStatus}");
 
             Console.Write("Set content to mail: ");
             str = Console.ReadLine();
-            response = service.SetContent(IdCompaign, new { html = str });
-            Console.WriteLine($"set content: {response.ResponseStatus}");
+            var responseSetContent = service.SetContent(IdCompaign, new { html = str });
+            Console.WriteLine($"set content: {responseSetContent.ResponseStatus}");
 
-            response = service.SendContent(IdCompaign);
-            Console.WriteLine($"send content: {response.ResponseStatus}");
+            var responseSendContent = service.SendContent(IdCompaign);
+            Console.WriteLine(responseSendContent.Content);
+            Console.WriteLine($"send content: {responseSendContent.ResponseStatus}");
 
             Console.ReadKey();
         }
+
+        static string GetIdCompaign(string str)
+        {
+            var count = 0;
+            var start = 0;
+            var end = 0;
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i].ToString() == @"""")
+                {
+                    count++;
+                    if (count == 3)
+                    {
+                        start = i + 1;
+                    }
+
+                    if (count == 4)
+                    {
+                        end = i - 1;
+                        break;
+                    }
+                }
+            }
+
+            return str.Substring(start, end - start + 1);
+        }
+
         static async void Test()
         {
             using (var http = new HttpClient())
