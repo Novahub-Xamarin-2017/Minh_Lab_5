@@ -57,7 +57,6 @@ namespace Exercise01
             Console.WriteLine($"set content: {responseSetContent.ResponseStatus}");
 
             var responseSendContent = service.SendContent(IdCompaign);
-            Console.WriteLine(responseSendContent.Content);
             Console.WriteLine($"send content: {responseSendContent.ResponseStatus}");
 
             Console.ReadKey();
