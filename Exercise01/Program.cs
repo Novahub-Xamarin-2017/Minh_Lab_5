@@ -21,6 +21,19 @@ namespace Exercise01
 
         static void Main(string[] args)
         {
+            Console.Write("Add email: ");
+            var email = Console.ReadLine();
+
+            Console.Write("Set content: ");
+            var content = Console.ReadLine();
+
+            SendEmail(email, content);
+
+            Console.ReadKey();
+        }
+
+        static void SendEmail(string emailString, string content)
+        {
             var restClient = new RestClient("https://us17.api.mailchimp.com/3.0/");
             restClient.Authenticator = new HttpBasicAuthenticator("username", ApiKey);
             restClient.AddDefaultHeader("content-type", "application/json");
@@ -28,14 +41,10 @@ namespace Exercise01
             var adapter = new RestAdapter(restClient);
             var service = adapter.Create<IService>();
 
-            Console.Write("Send mail to email: ");
-            var str = Console.ReadLine();
-            var email = new Email { EmailAddress = str, Status = "subscribed" };
+            var email = new Email { EmailAddress = emailString, Status = "subscribed" };
             SimpleJson.CurrentJsonSerializerStrategy = new SerializerStrategy();
             var responseAddEmail = service.AddEmail(IdList, email);
-            Console.WriteLine($"Add email: {responseAddEmail.ResponseStatus}");
 
-            Console.WriteLine("Create campaign: ");
             var campaign = new
             {
                 recipients = new { list_id = IdList },
@@ -49,27 +58,21 @@ namespace Exercise01
             };
             var responseCreateCampaign = service.CreateCampaign(campaign);
             IdCompaign = JsonConvert.DeserializeObject<Campaign>(responseCreateCampaign.Content).id;
-            Console.WriteLine($"Create campaign: {responseCreateCampaign.ResponseStatus}");
 
-            Console.Write("Set content to mail: ");
-            str = Console.ReadLine();
-            var responseSetContent = service.SetContent(IdCompaign, new { html = str });
-            Console.WriteLine($"set content: {responseSetContent.ResponseStatus}");
+            var responseSetContent = service.SetContent(IdCompaign, new { html = content });
 
             var responseSendContent = service.SendContent(IdCompaign);
-            Console.WriteLine($"send content: {responseSendContent.ResponseStatus}");
 
-            Console.ReadKey();
-        }
-
-        static async void Test()
-        {
-            using (var http = new HttpClient())
+            if (responseAddEmail.ResponseStatus.ToString().Contains("Completed") && responseCreateCampaign.ResponseStatus.ToString().Contains("Completed") && responseSetContent.ResponseStatus.ToString().Contains("Completed") && responseSendContent.StatusCode.ToString().Contains("NoContent"))
             {
-                http.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Basic", ApiKey);
-                string content = await http.GetStringAsync(@"https://us17.api.mailchimp.com/3.0/campaigns");
-                Console.WriteLine(content);
+                Console.WriteLine("Send: complete");
+            } else
+            {
+                Console.WriteLine("Send: error");
+                Console.WriteLine($"Add email: {responseAddEmail.ResponseStatus}");
+                Console.WriteLine($"Create campaign: {responseCreateCampaign.ResponseStatus}");
+                Console.WriteLine($"Set content: {responseSetContent.ResponseStatus}");
+                Console.WriteLine($"Send content: {responseSendContent.StatusCode}");
             }
         }
 
@@ -140,38 +143,6 @@ namespace Exercise01
                 var json = JsonConvert.SerializeObject(obj);
                 var objcontent = new StringContent(json, Encoding.UTF8, "application/json");
                 var rscontent = await http.PostAsync($"https://us17.api.mailchimp.com/3.0/lists/{IdList}/members", objcontent);
-                Console.WriteLine(rscontent.IsSuccessStatusCode.ToString());
-            }
-        }
-
-        static async void CreateList()
-        {
-            using (var http = new HttpClient())
-            {
-                http.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Basic", ApiKey);
-                var obj = new
-                {
-                    name = "listofminh",
-                    contact = new {
-                        company = "MailChimp",
-                        address1 = "address1",
-                        address2 = "address2",
-                        city = "Atlanta",
-                        state = "GA",
-                        zip = "30308",
-                        country = "US"},
-                    permission_reminder = "I",
-                    campaign_defaults = new {
-                        from_name = "minh",
-                        from_email = "huynhngocminh2511@gmail.com",
-                        subject = "",
-                        language = "en" },
-                    email_type_option = true
-                };
-                var json = JsonConvert.SerializeObject(obj);
-                var objcontent = new StringContent(json,Encoding.UTF8, "application/json");
-                var rscontent = await http.PostAsync(@"https://us17.api.mailchimp.com/3.0/lists",objcontent);
                 Console.WriteLine(rscontent.IsSuccessStatusCode.ToString());
             }
         }
